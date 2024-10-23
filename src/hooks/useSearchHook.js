@@ -10,7 +10,7 @@ export const useSearchHook = () => {
     const isFirstInput = useRef(true)
   
     useEffect(() => {
-        if(isFirstInput.current){
+      if(isFirstInput.current){
             isFirstInput.current = query === ''
             return
         }
@@ -18,7 +18,7 @@ export const useSearchHook = () => {
         setError('You can\'t search empty films');
         return;
       }
-      if (query.length <= 3) {
+      if (query.length < 3) {
         setError('You can\'t search films with less than 3 characters');
         return;
       }

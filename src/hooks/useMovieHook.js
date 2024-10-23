@@ -1,16 +1,34 @@
-import withResults from '../mockup/with-results.json';
+import { useState } from 'react';
 
-export const useMovieHook = () => {
-  const movies = withResults.Search
-  //mapper my dates
-  const moviesMapped = movies?.map(movie => ({
-    id: movie.imdbID,
-    img: movie.Poster,
-    title: movie.Title,
-    year: movie.Year
-  }))
+import { getMovies } from '../services/getMovies';
+
+export const useMovieHook = ({query}) => {
+  const [responseMovies, setResponseMovies] = useState([])
+  const [loading, setLoading] = useState(false)
+
+  const getNewMovies = async() => {
+    try {
+      setLoading(true)
+      const newMovies = await getMovies(query)
+      setResponseMovies(newMovies || [])
+    } catch (e) {
+      console.log('error in searching', e)
+      setResponseMovies([])
+    } finally{
+      setLoading(false)
+    }
+  }
+
+  // //servicio
+  // useEffect(() => {
+  //   getNewMovies()
+
+  // }, [query])
+  
   // the return of my hook
   return {
-    movies: moviesMapped
+    movies: responseMovies,
+    getNewMovies,
+    loading
   }
 }
